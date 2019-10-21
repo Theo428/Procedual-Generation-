@@ -63,7 +63,7 @@ public class MapGenerator
 	private static final Integer[] RIGHT_DOOR_IDS = {2, 5, 6, 10, 11, 12, 14, 15};
 	
 	//Max before dead ends added
-	private static final int MAX_ROOMS = 20;
+	private static final int MAX_ROOMS = 40;
 	
 	//will not spawn single door rooms unless necessary until this threshold is reached
 	private static final int MIN_ROOMS = 20;

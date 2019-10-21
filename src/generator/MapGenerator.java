@@ -63,10 +63,13 @@ public class MapGenerator
 	private static final Integer[] RIGHT_DOOR_IDS = {2, 5, 6, 10, 11, 12, 14, 15};
 	
 	//Max before dead ends added
-	private static final int MAX_ROOMS = 20;
+	private static final int MAX_ROOMS = 30;
 	
-	//will not spawn single door rooms unless necessary until this threshold is reached
-	private static final int MIN_ROOMS = 20;
+	//will not spawn single door rooms or boss rooms unless necessary until this threshold is reached
+	private static final int MIN_ROOMS = 10;
+	
+	//Maximum Bosses to be spawned
+	private static final int MAX_BOSSES = 2;
 	
 	//row and column of the start point
 	private int StartRow = 0;
@@ -76,7 +79,10 @@ public class MapGenerator
 	private int numRooms = 0;
 	
 	//whether or not the boss room has been created
-	private boolean hasMadeBossRoom = false;
+	private boolean ReachedMaxBosses = false;
+	
+	//current number of boss rooms
+	private int numBosses = 0;
 	
 	//The map itself
 	private ArrayList<ArrayList<String>> map = new ArrayList<ArrayList<String>>();
@@ -179,7 +185,7 @@ public class MapGenerator
 			ArrayList<Integer> possibleRooms = new ArrayList<Integer>(Arrays.asList(BOTTOM_DOOR_IDS));
 			
 			//replaced single door room with boss room in the same orientation
-			if(numRooms >= MIN_ROOMS && !hasMadeBossRoom)
+			if(numRooms >= MIN_ROOMS && !ReachedMaxBosses)
 			{
 				possibleRooms.set(0, 18);
 				System.out.println("Boss Room Possible "  + currentRow + " : " + currentColumn);
@@ -219,8 +225,14 @@ public class MapGenerator
 			//add room the the map
 			map.get(GetAbsoluteRow(currentRow + 1)).set(GetAbsoluteColumn(currentColumn), possibleRooms.get(roomIndex) + " " + roomTypeIndex);
 
-			//check if a boss room has been created
-			hasMadeBossRoom = hasMadeBossRoom || possibleRooms.get(roomIndex) == 18;
+			//check if a boss room was created
+			if(possibleRooms.get(roomIndex) == 18)
+			{
+				numBosses++;
+			}
+			
+			//check if maximum boss rooms has been reached
+			ReachedMaxBosses = ReachedMaxBosses || numBosses >= MAX_BOSSES;
 			
 			//recursivley add another room
 			AddRoom(currentRow + 1, currentColumn);
@@ -243,7 +255,7 @@ public class MapGenerator
 			ArrayList<Integer> possibleRooms = new ArrayList<Integer>(Arrays.asList(TOP_DOOR_IDS));
 			
 			//replaced single door room with boss room in the same orientation
-			if(numRooms >= MIN_ROOMS && !hasMadeBossRoom)
+			if(numRooms >= MIN_ROOMS && !ReachedMaxBosses)
 			{
 				possibleRooms.set(0, 16);
 				System.out.println("Boss Room Possible " + currentRow + " : " + currentColumn);
@@ -283,8 +295,14 @@ public class MapGenerator
 			//add room the the map
 			map.get(GetAbsoluteRow(currentRow - 1)).set(GetAbsoluteColumn(currentColumn), possibleRooms.get(roomIndex) + " " + roomTypeIndex);
 
-			//check if a boss room has been created
-			hasMadeBossRoom = hasMadeBossRoom || possibleRooms.get(roomIndex) == 16;
+			//check if a boss room was created
+			if(possibleRooms.get(roomIndex) == 16)
+			{
+				numBosses++;
+			}
+			
+			//check if maximum boss rooms has been reached
+			ReachedMaxBosses = ReachedMaxBosses || numBosses >= MAX_BOSSES;
 			
 			//recursivley add another room
 			AddRoom(currentRow - 1, currentColumn);
@@ -307,7 +325,7 @@ public class MapGenerator
 			ArrayList<Integer> possibleRooms = new ArrayList<Integer>(Arrays.asList(RIGHT_DOOR_IDS));
 			
 			//replaced single door room with boss room in the same orientation
-			if(numRooms >= MIN_ROOMS && !hasMadeBossRoom)
+			if(numRooms >= MIN_ROOMS && !ReachedMaxBosses)
 			{
 				possibleRooms.set(0, 17);
 				System.out.println("Boss Room Possible " + currentRow + " : " + currentColumn);
@@ -349,8 +367,14 @@ public class MapGenerator
 			//add room the the map
 			map.get(GetAbsoluteRow(currentRow)).set(GetAbsoluteColumn(currentColumn - 1), possibleRooms.get(roomIndex) + " " + roomTypeIndex);
 
-			//check if a boss room has been created
-			hasMadeBossRoom = hasMadeBossRoom || possibleRooms.get(roomIndex) == 17;
+			//check if a boss room was created
+			if(possibleRooms.get(roomIndex) == 17)
+			{
+				numBosses++;
+			}
+			
+			//check if maximum boss rooms has been reached
+			ReachedMaxBosses = ReachedMaxBosses || numBosses >= MAX_BOSSES;
 			
 			//recursivley add another room
 			AddRoom(currentRow, currentColumn - 1);
@@ -373,7 +397,7 @@ public class MapGenerator
 			ArrayList<Integer> possibleRooms = new ArrayList<Integer>(Arrays.asList(LEFT_DOOR_IDS));
 			
 			//replaced single door room with boss room in the same orientation
-			if(numRooms >= MIN_ROOMS && !hasMadeBossRoom)
+			if(numRooms >= MIN_ROOMS && !ReachedMaxBosses)
 			{
 				possibleRooms.set(0, 19);
 				System.out.println("Boss Room Possible " + currentRow + " : " + currentColumn);
@@ -414,9 +438,15 @@ public class MapGenerator
 			
 			//add room the the map
 			map.get(GetAbsoluteRow(currentRow)).set(GetAbsoluteColumn(currentColumn + 1), possibleRooms.get(roomIndex) + " " + roomTypeIndex);
+
+			//check if a boss room was created
+			if(possibleRooms.get(roomIndex) == 19)
+			{
+				numBosses++;
+			}
 			
-			//check if a boss room has been created
-			hasMadeBossRoom = hasMadeBossRoom || possibleRooms.get(roomIndex) == 19;
+			//check if maximum boss rooms has been reached
+			ReachedMaxBosses = ReachedMaxBosses || numBosses >= MAX_BOSSES;
 			
 			//recursivley add another room
 			AddRoom(currentRow, currentColumn + 1);
